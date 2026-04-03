@@ -37,6 +37,37 @@ const COMPANY_INFO = {
   email: "hello@desknet.io"
 };
 
+const drawLogo = (doc: jsPDF, x: number, y: number, size: number = 12) => {
+  const s = size / 100; // scale factor
+  
+  // Draw Stylized 'D'
+  doc.setDrawColor(45, 212, 191); // brand-teal
+  doc.setLineWidth(s * 6);
+  
+  doc.moveTo(x + 35 * s, y + 25 * s);
+  doc.curveTo(x + 30 * s, y + 25 * s, x + 30 * s, y + 30 * s, x + 30 * s, y + 35 * s);
+  doc.lineTo(x + 30 * s, y + 65 * s);
+  doc.curveTo(x + 30 * s, y + 70 * s, x + 30 * s, y + 75 * s, x + 35 * s, y + 75 * s);
+  doc.lineTo(x + 55 * s, y + 75 * s);
+  doc.curveTo(x + 70 * s, y + 75 * s, x + 80 * s, y + 65 * s, x + 80 * s, y + 50 * s);
+  doc.curveTo(x + 80 * s, y + 35 * s, x + 70 * s, y + 25 * s, x + 55 * s, y + 25 * s);
+  doc.lineTo(x + 35 * s, y + 25 * s);
+  doc.stroke();
+
+  // Draw 'N'
+  doc.setDrawColor(15, 23, 42); // slate-900
+  doc.setLineWidth(s * 4);
+  doc.moveTo(x + 45 * s, y + 60 * s);
+  doc.lineTo(x + 45 * s, y + 40 * s);
+  doc.lineTo(x + 65 * s, y + 60 * s);
+  doc.lineTo(x + 65 * s, y + 40 * s);
+  doc.stroke();
+
+  // Accent Dot
+  doc.setFillColor(45, 212, 191);
+  doc.circle(x + 80 * s, y + 50 * s, s * 3, 'F');
+};
+
 export interface JobHistoryItem {
   jobId: string;
   subject: string;
@@ -67,14 +98,17 @@ export const generateJobHistoryPDF = (items: JobHistoryItem[]) => {
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -96,7 +130,7 @@ export const generateJobHistoryPDF = (items: JobHistoryItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['JOB ID', 'SUBJECT', 'CLIENT', 'ENGINEER', 'TYPE', 'COMPLETED']],
     body: tableData,
     theme: 'striped',
@@ -126,7 +160,7 @@ export const generateJobHistoryPDF = (items: JobHistoryItem[]) => {
 
   items.forEach((item, index) => {
     // Check if we need a new page for the detailed section
-    if (currentY > pageHeight - 60) {
+    if (currentY > pageHeight - 40) {
       doc.addPage();
       currentY = 30;
     }
@@ -296,14 +330,17 @@ export const generateStaffListPDF = (staff: StaffListItem[]) => {
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -323,7 +360,7 @@ export const generateStaffListPDF = (staff: StaffListItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['NAME', 'EMAIL', 'ROLE', 'STATUS', 'JOINED']],
     body: tableData,
     theme: 'striped',
@@ -352,14 +389,17 @@ export const generateEngineerListPDF = (engineers: EngineerListItem[]) => {
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -381,7 +421,7 @@ export const generateEngineerListPDF = (engineers: EngineerListItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['NAME', 'EMAIL', 'LOCATION', 'TYPE', 'LEVEL', 'STATUS', 'JOINED']],
     body: tableData,
     theme: 'striped',
@@ -398,35 +438,44 @@ export const generateEngineerListPDF = (engineers: EngineerListItem[]) => {
   });
 
   // Detailed View for each engineer
+  let currentY = (doc as any).lastAutoTable.finalY + 15;
+
   engineers.forEach((engineer, index) => {
-    doc.addPage();
+    // Check if we need a new page for the detailed section
+    if (currentY > pageHeight - 80) {
+      doc.addPage();
+      currentY = 30;
+      
+      // Header for detailed page
+      doc.setFillColor(45, 212, 191);
+      doc.rect(0, 0, pageWidth, 15, 'F');
+    }
     
-    // Header for detailed page
-    doc.setFillColor(45, 212, 191);
-    doc.rect(0, 0, pageWidth, 15, 'F');
-    
-    doc.setFontSize(18);
+    doc.setFontSize(14);
     doc.setTextColor(15, 23, 42);
     doc.setFont('helvetica', 'bold');
-    doc.text(`ENGINEER PROFILE: ${engineer.name}`, margin, 35);
+    doc.text(`ENGINEER PROFILE: ${engineer.name}`, margin, currentY);
     
-    doc.setFontSize(10);
+    doc.setFontSize(9);
     doc.setTextColor(45, 212, 191);
-    doc.text("DETAILED REGISTRATION INFORMATION", margin, 41);
+    doc.text("DETAILED REGISTRATION INFORMATION", margin, currentY + 6);
 
     doc.setDrawColor(226, 232, 240);
-    doc.line(margin, 45, pageWidth - margin, 45);
+    doc.line(margin, currentY + 10, pageWidth - margin, currentY + 10);
     
-    let currentY = 60;
+    currentY += 20;
     const labelX = margin;
     const valueX = margin + 50;
     
     const drawRow = (label: string, value: any) => {
       if (currentY > pageHeight - 20) {
         doc.addPage();
-        currentY = 20;
+        currentY = 30;
+        // Header for detailed page
+        doc.setFillColor(45, 212, 191);
+        doc.rect(0, 0, pageWidth, 15, 'F');
       }
-      doc.setFontSize(10);
+      doc.setFontSize(9);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(51, 65, 85);
       doc.text(label, labelX, currentY);
@@ -436,7 +485,7 @@ export const generateEngineerListPDF = (engineers: EngineerListItem[]) => {
       const stringValue = typeof value === 'string' ? value : (value ? String(value) : 'N/A');
       const splitValue = doc.splitTextToSize(stringValue, pageWidth - valueX - margin);
       doc.text(splitValue, valueX, currentY);
-      currentY += (splitValue.length * 5) + 5;
+      currentY += (splitValue.length * 4) + 4;
     };
     
     drawRow("FULL NAME:", engineer.name);
@@ -513,20 +562,24 @@ export const generateEngineerListPDF = (engineers: EngineerListItem[]) => {
 export const generateClientListPDF = (clients: ClientListItem[]) => {
   const doc = new jsPDF();
   const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
   const margin = 20;
 
   // Header
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -548,7 +601,7 @@ export const generateClientListPDF = (clients: ClientListItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['NAME', 'COMPANY', 'EMAIL', 'LOCATION', 'SIZE', 'STATUS', 'JOINED']],
     body: tableData,
     theme: 'striped',
@@ -564,27 +617,39 @@ export const generateClientListPDF = (clients: ClientListItem[]) => {
     }
   });
 
-  // Detailed View for each client (One per page as requested in similar context)
+  // Detailed View for each client
+  let currentY = (doc as any).lastAutoTable.finalY + 15;
+
   clients.forEach((client, index) => {
-    doc.addPage();
+    // Check if we need a new page
+    if (currentY > pageHeight - 40) {
+      doc.addPage();
+      currentY = 30;
+      
+      // Header for detailed page
+      doc.setFillColor(45, 212, 191);
+      doc.rect(0, 0, pageWidth, 15, 'F');
+    }
     
-    // Header for detailed page
-    doc.setFillColor(45, 212, 191);
-    doc.rect(0, 0, pageWidth, 15, 'F');
-    
-    doc.setFontSize(18);
+    doc.setFontSize(14);
     doc.setTextColor(15, 23, 42);
     doc.setFont('helvetica', 'bold');
-    doc.text(`CLIENT PROFILE: ${client.name}`, margin, 35);
+    doc.text(`CLIENT PROFILE: ${client.name}`, margin, currentY);
     
     doc.setDrawColor(226, 232, 240);
-    doc.line(margin, 40, pageWidth - margin, 40);
+    doc.line(margin, currentY + 5, pageWidth - margin, currentY + 5);
     
-    let currentY = 55;
+    currentY += 15;
     const labelX = margin;
     const valueX = margin + 50;
     
     const drawRow = (label: string, value: string) => {
+      if (currentY > pageHeight - 20) {
+        doc.addPage();
+        currentY = 30;
+        doc.setFillColor(45, 212, 191);
+        doc.rect(0, 0, pageWidth, 15, 'F');
+      }
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(51, 65, 85);
@@ -647,14 +712,17 @@ export const generateTicketReportPDF = (tickets: TicketReportItem[]) => {
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -676,7 +744,7 @@ export const generateTicketReportPDF = (tickets: TicketReportItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['TICKET ID', 'SUBJECT', 'CLIENT', 'STATUS', 'PRIORITY', 'CREATED']],
     body: tableData,
     theme: 'striped',
@@ -706,7 +774,7 @@ export const generateTicketReportPDF = (tickets: TicketReportItem[]) => {
 
   tickets.forEach((ticket, index) => {
     // Check if we need a new page for the detailed section
-    if (currentY > pageHeight - 60) {
+    if (currentY > pageHeight - 40) {
       doc.addPage();
       currentY = 30;
     }
@@ -850,14 +918,17 @@ export const generateOpportunityReportPDF = (opportunities: OpportunityReportIte
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -879,7 +950,7 @@ export const generateOpportunityReportPDF = (opportunities: OpportunityReportIte
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['ID', 'TITLE', 'CLIENT', 'TYPE', 'STATUS', 'CREATED']],
     body: tableData,
     theme: 'striped',
@@ -900,7 +971,7 @@ export const generateOpportunityReportPDF = (opportunities: OpportunityReportIte
   let currentY = (doc as any).lastAutoTable.finalY + 20;
 
   opportunities.forEach((opp) => {
-    if (currentY > pageHeight - 60) {
+    if (currentY > pageHeight - 40) {
       doc.addPage();
       currentY = 30;
     }
@@ -996,14 +1067,17 @@ export const generateJobsReportPDF = (jobs: JobPostingReportItem[]) => {
   doc.setFillColor(45, 212, 191); // brand-teal
   doc.rect(0, 0, pageWidth, 15, 'F');
 
+  // Logo
+  drawLogo(doc, margin, 25, 12);
+
   doc.setFontSize(22);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 15, 35);
   
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 15, 41);
 
   doc.setFontSize(18);
   doc.setTextColor(15, 23, 42);
@@ -1024,7 +1098,7 @@ export const generateJobsReportPDF = (jobs: JobPostingReportItem[]) => {
   ]);
 
   autoTable(doc, {
-    startY: 60,
+    startY: 55,
     head: [['TITLE', 'LOCATION', 'TYPE', 'SALARY', 'POSTED']],
     body: tableData,
     theme: 'striped',
@@ -1045,7 +1119,7 @@ export const generateJobsReportPDF = (jobs: JobPostingReportItem[]) => {
   let currentY = (doc as any).lastAutoTable.finalY + 20;
 
   jobs.forEach((job) => {
-    if (currentY > pageHeight - 100) {
+    if (currentY > pageHeight - 60) {
       doc.addPage();
       currentY = 30;
     }
@@ -1163,17 +1237,20 @@ export const generatePOPDF = (data: POData) => {
   doc.rect(0, 0, pageWidth, 15, 'F');
 
   // --- Header Section ---
+  // Logo
+  drawLogo(doc, margin, 25, 15);
+
   // Logo / Company Name
   doc.setFontSize(28);
   doc.setTextColor(15, 23, 42); // slate-900
   doc.setFont('helvetica', 'bold');
-  doc.text("DESKNET", margin, 35);
+  doc.text("DESKNET", margin + 18, 35);
   
   // Tagline or Subtitle
   doc.setFontSize(10);
   doc.setTextColor(45, 212, 191); // brand-teal
   doc.setFont('helvetica', 'bold');
-  doc.text("GLOBAL SOLUTIONS", margin, 41);
+  doc.text("GLOBAL SOLUTIONS", margin + 18, 41);
 
   // Company Info (Left Aligned under Logo)
   doc.setFontSize(9);
@@ -1205,7 +1282,7 @@ export const generatePOPDF = (data: POData) => {
   doc.text(data.quoteRef, pageWidth - margin, metaY + 12, { align: 'right' });
 
   // --- Client & Requester Info Section ---
-  const infoY = 85;
+  const infoY = 75;
   
   // Decorative line
   doc.setDrawColor(226, 232, 240); // slate-200
@@ -1261,7 +1338,7 @@ export const generatePOPDF = (data: POData) => {
   ]);
 
   autoTable(doc, {
-    startY: infoY + 45,
+    startY: infoY + 40,
     head: [['#', 'DESCRIPTION', 'QTY', 'UNIT PRICE', 'TOTAL']],
     body: tableData,
     theme: 'striped',
